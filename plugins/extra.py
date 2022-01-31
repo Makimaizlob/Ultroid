@@ -1,98 +1,144 @@
-# Ultroid - UserBot
-# Copyright (C) 2021-2022 TeamUltroid
-#
-# This file is a part of < https://github.com/TeamUltroid/Ultroid/ >
-# PLease read the GNU Affero General Public License in
-# <https://www.github.com/TeamUltroid/Ultroid/blob/main/LICENSE/>.
-"""
-✘ Commands Available -
-
-• `{i}del <reply to message>`
-    Delete the replied message.
-
-• `{i}edit <new message>`
-    Edit your last message or replied msg.
-
-• `{i}copy <reply to message>`
-    Copy replied message / media.
-
-• `{i}reply`
-    Reply the last sent msg to replied user.
-"""
 import asyncio
+import time
+from collections import deque
 
-from . import get_string, ultroid_cmd
+from telethon.tl.functions.channels import LeaveChannelRequest
+
+from userbot import CMD_HELP, bot
+from userbot.utils import admin_cmd
 
 
-@ultroid_cmd(
-    pattern="del$",
-    manager=True,
-)
-async def delete_it(delme):
-    msg_src = await delme.get_reply_message()
-    if not msg_src:
+@borg.on(admin_cmd("leave$"))
+async def leave(e):
+    if not e.text[0].isalpha() and e.text[0] not in ("/", "#", "@", "!"):
+        await e.edit("`I iz Leaving dis Lol Group kek!`")
+        time.sleep(3)
+        if "-" in str(e.chat_id):
+            await bot(LeaveChannelRequest(e.chat_id))
+        else:
+            await e.edit("`But Boss! This is Not A Chat`")
+
+
+@borg.on(admin_cmd(";__;$"))
+# @register(outgoing=True, pattern="^;__;$")
+async def fun(e):
+    t = ";__;"
+    for j in range(10):
+        t = t[:-1] + "_;"
+        await e.edit(t)
+
+
+@borg.on(admin_cmd("yo$"))
+# @register(outgoing=True, pattern="^yo$")
+async def Ooo(e):
+    t = "yo"
+    for j in range(15):
+        t = t[:-1] + "oo"
+        await e.edit(t)
+
+
+@borg.on(admin_cmd("Oof$"))
+# @register(outgoing=True, pattern="^Oof$")
+async def Oof(e):
+    t = "Oof"
+    for j in range(15):
+        t = t[:-1] + "of"
+        await e.edit(t)
+
+
+@borg.on(admin_cmd("ccry$"))
+# @register(outgoing=True, pattern="^.cry$")
+async def cry(e):
+    if not e.text[0].isalpha() and e.text[0] not in ("/", "#", "@", "!"):
+        await e.edit("(;´༎ຶД༎ຶ)")
+
+
+@borg.on(admin_cmd("fp$"))
+# @register(outgoing=True, pattern="^.fp$")
+async def facepalm(e):
+    if not e.text[0].isalpha() and e.text[0] not in ("/", "#", "@", "!"):
+        await e.edit("🤦‍♂")
+
+
+@borg.on(admin_cmd("moon$"))
+# @register(outgoing=True, pattern="^.mmoon$")
+async def _(event):
+    if event.fwd_from:
         return
-    try:
-        await msg_src.delete()
-        await delme.delete()
-    except Exception as e:
-        await delme.eor(f"Couldn't delete the message.\n\n**ERROR:**\n`{e}`", time=5)
+    deq = deque(list("🌗🌘🌑🌒🌓🌔🌕🌖"))
+    for _ in range(32):
+        await asyncio.sleep(0.1)
+        await event.edit("".join(deq))
+        deq.rotate(1)
 
 
-@ultroid_cmd(
-    pattern="copy$",
-)
-async def copy(e):
-    reply = await e.get_reply_message()
-    if reply:
-        await reply.reply(reply)
-        return await e.try_delete()
-    await e.eor(get_string("ex_1"), time=5)
+@borg.on(admin_cmd("source$"))
+# @register(outgoing=True, pattern="^.source$")
+async def source(e):
+    if not e.text[0].isalpha() and e.text[0] not in ("/", "#", "@", "!"):
+        await e.edit("/Spandey112/SensibleUserbot")
 
 
-@ultroid_cmd(
-    pattern="edit",
-)
-async def editer(edit):
-    message = edit.text
-    chat = await edit.get_input_chat()
-    string = str(message[6:])
-    reply = await edit.get_reply_message()
-    if reply and reply.text:
-        try:
-            await reply.edit(string)
-            await edit.delete()
-        except BaseException:
-            pass
-    else:
-        i = 1
-        async for message in edit.client.iter_messages(chat, from_user="me", limit=2):
-            if i == 2:
-                await message.edit(string)
-                await edit.delete()
-                break
-            i += 1
+@borg.on(admin_cmd("readme$"))
+# @register(outgoing=True, pattern="^.readme$")
+async def reedme(e):
+    if not e.text[0].isalpha() and e.text[0] not in ("/", "#", "@", "!"):
+        await e.edit("/Spandey112/SensibleUserbot/blob/master/README.md")
 
 
-@ultroid_cmd(
-    pattern="reply$",
-)
-async def _(e):
-    if e.reply_to_msg_id:
-        chat = e.chat_id
-        try:
-            msg = (await e.client.get_messages(e.chat_id, limit=1, max_id=e.id))[0]
-        except IndexError:
-            return await e.eor(
-                "`You have previously sent no message to reply again...`", time=5
-            )
-        except BaseException as er:
-            return await e.eor(f"**ERROR:** `{er}`")
-        await asyncio.wait(
-            [
-                e.client.delete_messages(chat, [e.id, msg.id]),
-                e.client.send_message(chat, msg, reply_to=e.reply_to_msg_id),
-            ]
+@borg.on(admin_cmd("heart$"))
+# @register(outgoing=True, pattern="^.heart$")
+async def _(event):
+    if event.fwd_from:
+        return
+    deq = deque(list("❤️🧡💛💚💙💜🖤"))
+    for _ in range(32):
+        await asyncio.sleep(0.1)
+        await event.edit("".join(deq))
+        deq.rotate(1)
+
+
+@borg.on(admin_cmd("fap$"))
+# @register(outgoing=True, pattern="^.fap$")
+async def _(event):
+    if event.fwd_from:
+        return
+    deq = deque(list("🍆✊🏻💦"))
+    for _ in range(32):
+        await asyncio.sleep(0.1)
+        await event.edit("".join(deq))
+        deq.rotate(1)
+
+
+@borg.on(admin_cmd(pattern="evil ?(.*)"))
+async def _(event):
+    if not event.text[0].isalpha() and event.text[0] not in ("/", "#", "@", "!"):
+        await event.edit("😒You Know I'm a good **PERSON**😏")
+        await asyncio.sleep(1.9)
+        await event.edit("BUT😡")
+        await asyncio.sleep(1.2)
+        await event.edit("😑Don't give me a reason😠")
+        await asyncio.sleep(1.9)
+        await event.edit("🤨To show my😎")
+        await asyncio.sleep(1.4)
+        await event.edit("**😈EVIL SIDE**😈")
+        await asyncio.sleep(1.3)
+        await event.edit(
+            "**😈YOU KNOW THAT I'M A GOOD PERSON. BUT DON'T GIVE ME REASON TO SHOW MY EVIL SIDE😈**"
         )
-    else:
-        await e.try_delete()
+
+
+CMD_HELP.update({"leave": "Leave a Chat"})
+CMD_HELP.update({";__;": "You try it!"})
+CMD_HELP.update({"cry": "Cry"})
+CMD_HELP.update({"fp": "Send face palm emoji."})
+CMD_HELP.update({"moon": "Bot will send a cool moon animation."})
+CMD_HELP.update({"clock": "Bot will send a cool clock animation."})
+CMD_HELP.update({"readme": "Reedme."})
+CMD_HELP.update({"source": "Gives the source of your userbot"})
+CMD_HELP.update({"myusernames": "List of Usernames owned by you."})
+CMD_HELP.update({"oof": "Same as ;__; but ooof"})
+CMD_HELP.update({"earth": "Sends Kensar Earth animation"})
+CMD_HELP.update({"heart": "Try and you'll get your emotions back"})
+CMD_HELP.update({"fap": "Faking orgasm"})
+CMD_HELP.update({"evil": "shows evil side"})
